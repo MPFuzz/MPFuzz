@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Peach xmlns="http://peachfuzzer.com/2012/Peach" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://peachfuzzer.com/2012/Peach ../peach.xsd">
+
+
+<Include ns="mqtt" src="mqtt_data.xml"/>
+
+<StateModel name="mqttStateModel" initialState="test">
+	<State name="test">
+
+		<Action name="connect" type="output" publisher="client">
+			<DataModel ref="mqtt:Connect"/>
+		</Action>
+
+		<Action name="publish" type="output" publisher="client">
+			<DataModel ref="mqtt:Publish"/>
+		</Action>
+
+		<Action type="output" publisher="client">
+			<DataModel ref="mqtt:Publish_QoS1"/>
+		</Action>
+
+		<Action type="output" publisher="client">
+			<DataModel ref="mqtt:Publish_QoS2"/>
+		</Action>
+
+		<Action type="output" publisher="client">
+			<DataModel ref="mqtt:Publish_Received"/>
+		</Action>
+
+		<Action type="output" publisher="client">
+			<DataModel ref="mqtt:Publish_Complete"/>
+		</Action>
+
+		<Action type="output" publisher="client">
+			<DataModel ref="mqtt:Disconnect"/>
+		</Action>
+
+		<Action name="connect_simple" type="output" publisher="client">
+			<DataModel ref="mqtt:Connect_Simple"/>
+		</Action>
+		
+		<Action type="output" publisher="client">
+			<DataModel ref="mqtt:Connect_Ack"/>
+		</Action>
+
+	</State>
+</StateModel>
+
+<Test name="Default" replayEnabled="false">
+	<Agent ref="LinAgent" platform="linux"/> 
+
+	<StateModel ref="mqttStateModel"/>
+	
+	<Publisher class="TcpClient" name="client">
+		<Param name="Host" value="127.0.0.1" />
+		<Param name="Port" value="1883" />
+	</Publisher>
+
+	<Strategy class="Random">
+		<Param name="MaxFieldsToMutate" value="5"/>
+	</Strategy>
+
+	<Logger class="File">
+		<Param name="Path" value="Logs-client" />
+	</Logger>
+</Test>
+
+</Peach>
+<!-- end -->
